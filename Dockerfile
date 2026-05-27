@@ -41,7 +41,7 @@ RUN apt-get update -yq && \
 FROM debian:stable-slim
 
 RUN apt-get update -yq && \
-    apt-get install -yq --no-install-recommends libsqlite3-0 && \
+    apt-get install -yq --no-install-recommends libsqlite3-0 wget ca-certificates && \
     rm -rf /var/lib/apt/lists/*
 
 # copy ca certificates
@@ -52,8 +52,9 @@ COPY --from=tini-stage /usr/bin/tini /usr/bin/tini
 
 RUN mkdir -p /app/data
 ENV ZIGBIN_DB_PATH=/app/data/zigbin.db
+ENV ZIGBIN_PORT=5882
 
-EXPOSE 5882/tcp
+EXPOSE 5882
 
 # Using "tini" as PID1 ensures that signals work as expected, so e.g. "docker stop" will not hang.
 ENTRYPOINT ["/usr/bin/tini", "--"]
