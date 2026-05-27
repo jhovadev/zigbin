@@ -10,6 +10,7 @@ services:
       - ZIGBIN_DB_PATH=/app/data/zigbin.db
       - ZIGBIN_ENCRYPTION_KEY=super-secret-zigbin-default-passphrase-2026
       - ZIGBIN_TRUST_PROXY=true
+      - ZIGBIN_CORS_ORIGIN=* # Set your web URL here (e.g. https://yourweb.com) to restrict API access
     restart: unless-stopped
   
 volumes:

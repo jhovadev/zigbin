@@ -22,15 +22,24 @@ pub fn main(init: std.process.Init) !void {
 
     // Setup the HTTP server (controller layer)
     var server = try httpz.Server(*App).init(io, gpa, .{
-        .address = .localhost(config.port),
+        .address = .all(config.port),
     }, &app);
     defer {
         server.stop();
         server.deinit();
     }
 
+    // Configure CORS middleware to support client requests
+    const cors = try server.middleware(httpz.middleware.Cors, .{
+        .origin = config.cors_origin orelse "*",
+        .methods = "GET,POST,OPTIONS",
+        .headers = "Content-Type,X-Filename,X-Password,X-Expires-In,X-Available-At",
+    });
+
     // Register routes
-    var router = try server.router(.{});
+    var router = try server.router(.{
+        .middlewares = &.{cors},
+    });
     router.get("/", handlers.handleIndex, .{});
     router.post("/p", handlers.handleCreatePaste, .{});
     router.get("/p/:id", handlers.handleGetPaste, .{});
@@ -127,6 +136,11 @@ fn loadConfig() Config {
         config.trust_forwarded_for = std.mem.eql(u8, val, "true") or
             std.mem.eql(u8, val, "1") or
             std.mem.eql(u8, val, "yes");
+    }
+
+    // CORS Origin
+    if (getEnv("ZIGBIN_CORS_ORIGIN")) |origin| {
+        config.cors_origin = origin;
     }
 
     return config;

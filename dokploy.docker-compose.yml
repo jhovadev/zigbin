@@ -8,9 +8,10 @@ services:
       - ZIGBIN_DB_PATH=/app/data/zigbin.db
       - ZIGBIN_ENCRYPTION_KEY=super-secret-zigbin-default-passphrase-2026
       - ZIGBIN_TRUST_PROXY=true
+      - ZIGBIN_CORS_ORIGIN=* # Set your web URL here (e.g. https://yourweb.com) to restrict API access
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:5882/"]
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:5882/"]
       interval: 10s
       timeout: 5s
       retries: 5

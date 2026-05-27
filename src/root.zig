@@ -105,6 +105,9 @@ pub const Config = struct {
     /// If true, trust X-Forwarded-For header for client IP (for reverse proxies).
     trust_forwarded_for: bool = false,
 
+    /// Allowed CORS origin. Defaults to "*" if null.
+    cors_origin: ?[]const u8 = null,
+
     pub const default: Config = .{};
 };
 
