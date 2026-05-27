@@ -41,6 +41,7 @@ pub fn main(init: std.process.Init) !void {
         .middlewares = &.{cors},
     });
     router.get("/", handlers.handleIndex, .{});
+    router.head("/", handlers.handleIndex, .{});
     router.post("/p", handlers.handleCreatePaste, .{});
     router.get("/p/:id", handlers.handleGetPaste, .{});
 
