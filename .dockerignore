@@ -1,0 +1,9 @@
+.zig-cache/
+zig-out/
+zig-pkg/
+.git/
+*.db
+mcp.db
+README.md
+mise.toml
+.dockerignore
